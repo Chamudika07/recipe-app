@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from .. import models, database, utils, auth
 from pydantic import BaseModel
+from ..database import get_db
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -16,7 +17,7 @@ class UserLogin(BaseModel):
     password: str
 
 @router.post("/signup")
-def create_user(user: UserCreate, db: Session = Depends(database.SessionLocal)):
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
     existing = db.query(models.User).filter(models.User.email == user.email).first()
     if existing:
         raise HTTPException(status_code=400, detail="User already exists")
@@ -29,7 +30,7 @@ def create_user(user: UserCreate, db: Session = Depends(database.SessionLocal)):
     return {"message": "User created", "user": new_user.email}
 
 @router.post("/login")
-def login(user: UserLogin, db: Session = Depends(database.SessionLocal)):
+def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if not db_user or not utils.verify_password(user.password, db_user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
