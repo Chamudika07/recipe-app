@@ -4,13 +4,18 @@
 import { useState, useEffect } from 'react';
 import VoteButtons from '@/components/VoteButtons';
 import { Recipe } from '../../../types';
+import Link from 'next/link';
 
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [showBestOnly, setShowBestOnly] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
     fetchRecipes();
   }, [showBestOnly]);
 
@@ -53,13 +58,31 @@ export default function RecipesPage() {
         <h1 className="text-2xl font-bold">
           {showBestOnly ? 'Best Recipes' : 'All Recipes'}
         </h1>
-        <button
-          onClick={() => setShowBestOnly(!showBestOnly)}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          {showBestOnly ? 'Show All Recipes' : 'Show Best Recipes'}
-        </button>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => setShowBestOnly(!showBestOnly)}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            {showBestOnly ? 'Show All Recipes' : 'Show Best Recipes'}
+          </button>
+          {!isAuthenticated && (
+            <Link
+              href="/login"
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            >
+              Login to Vote
+            </Link>
+          )}
+        </div>
       </div>
+
+      {!isAuthenticated && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <p className="text-yellow-800">
+            💡 <strong>Tip:</strong> Login to vote on recipes and help determine the best ones!
+          </p>
+        </div>
+      )}
 
       {recipes.length === 0 ? (
         <p className="text-gray-600">No recipes found.</p>

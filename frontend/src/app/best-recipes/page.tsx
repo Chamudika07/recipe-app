@@ -8,8 +8,12 @@ import Link from 'next/link';
 export default function BestRecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
     fetchBestRecipes();
   }, []);
 
@@ -52,13 +56,31 @@ export default function BestRecipesPage() {
           <h1 className="text-3xl font-bold text-gray-800">🏆 Best Recipes</h1>
           <p className="text-gray-600 mt-2">Top-rated recipes by our community</p>
         </div>
-        <Link
-          href="/recipes"
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          View All Recipes
-        </Link>
+        <div className="flex items-center space-x-4">
+          <Link
+            href="/recipes"
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            View All Recipes
+          </Link>
+          {!isAuthenticated && (
+            <Link
+              href="/login"
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            >
+              Login to Vote
+            </Link>
+          )}
+        </div>
       </div>
+
+      {!isAuthenticated && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <p className="text-yellow-800">
+            💡 <strong>Tip:</strong> Login to vote on recipes and help determine the best ones!
+          </p>
+        </div>
+      )}
 
       {recipes.length === 0 ? (
         <div className="text-center py-12">
