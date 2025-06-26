@@ -44,20 +44,20 @@ export default function LoginPage() {
     >
       <div className="bg-white/90 backdrop-blur-sm p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">🍳 Welcome Back</h1>
-          <p className="text-gray-600">Sign in to your RecipeApp account</p>
+          <h1 className="text-3xl font-bold text-black mb-2">🍳 Welcome Back</h1>
+          <p className="text-black">Sign in to your RecipeApp account</p>
         </div>
         
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-black mb-1">
               Email Address
             </label>
             <input
               id="email"
               type="email"
               placeholder="Enter your email"
-              className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -65,14 +65,14 @@ export default function LoginPage() {
           </div>
           
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-black mb-1">
               Password
             </label>
             <input
               id="password"
               type="password"
               placeholder="Enter your password"
-              className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -88,7 +88,7 @@ export default function LoginPage() {
         </form>
         
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-black">
             Don&apos;t have an account?{" "}
             <Link href="/signup" className="text-blue-600 hover:text-blue-800 font-medium">
               Sign up here
