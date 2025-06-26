@@ -23,6 +23,7 @@ export default function RootLayout({
             </Link>
             <div className="space-x-4">
               <Link href="/recipes" className="hover:underline">Recipes</Link>
+              <Link href="/best-recipes" className="hover:underline">🏆 Best</Link>
               <Link href="/recipess/add" className="hover:underline">Add</Link>
               <Link href="/signup" className="hover:underline">Sign Up</Link>
               <Link href="/login" className="hover:underline">Login</Link>
