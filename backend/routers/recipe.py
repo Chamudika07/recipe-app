@@ -1,21 +1,22 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-import models, schemas
-from dependencies import get_db, get_current_user
+from backend.models import Recipe, User, Vote
+from backend.schemas import RecipeCreate, RecipeOut, VoteCreate
+from backend.dependencies import get_db, get_current_user
 
 router = APIRouter(prefix="/recipes", tags=["Recipes"])
 
-@router.post("/", response_model=schemas.RecipeOut)
+@router.post("/", response_model=RecipeOut)
 def create_recipe(
-    recipe: schemas.RecipeCreate,
+    recipe: RecipeCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     if current_user.role != "chef":
         raise HTTPException(status_code=403, detail="Only chefs can create recipes")
     
-    new_recipe = models.Recipe(
+    new_recipe = Recipe(
         title=recipe.title,
         description=recipe.description,
         user_id=current_user.id
@@ -25,18 +26,18 @@ def create_recipe(
     db.refresh(new_recipe)
     return new_recipe
 
-@router.get("/", response_model=list[schemas.RecipeOut])
+@router.get("/", response_model=list[RecipeOut])
 def get_all_recipes(db: Session = Depends(get_db)):
-    return db.query(models.Recipe).order_by(desc(models.Recipe.vote_count)).all()
+    return db.query(Recipe).order_by(desc(Recipe.vote_count)).all()
 
-@router.get("/best", response_model=list[schemas.RecipeOut])
+@router.get("/best", response_model=list[RecipeOut])
 def get_best_recipes(db: Session = Depends(get_db), limit: int = 10):
     """Get the top recipes by vote count"""
-    return db.query(models.Recipe).order_by(desc(models.Recipe.vote_count)).limit(limit).all()
+    return db.query(Recipe).order_by(desc(Recipe.vote_count)).limit(limit).all()
 
-@router.get("/{recipe_id}", response_model=schemas.RecipeOut)
+@router.get("/{recipe_id}", response_model=RecipeOut)
 def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
-    recipe = db.query(models.Recipe).filter(models.Recipe.id == recipe_id).first()
+    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
     return recipe
@@ -44,19 +45,19 @@ def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
 @router.post("/{recipe_id}/vote")
 def vote_recipe(
     recipe_id: int,
-    vote: schemas.VoteCreate,
+    vote: VoteCreate,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     # Check if recipe exists
-    recipe = db.query(models.Recipe).filter(models.Recipe.id == recipe_id).first()
+    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
     
     # Check if user has already voted on this recipe
-    existing_vote = db.query(models.Vote).filter(
-        models.Vote.user_id == current_user.id,
-        models.Vote.recipe_id == recipe_id
+    existing_vote = db.query(Vote).filter(
+        Vote.user_id == current_user.id,
+        Vote.recipe_id == recipe_id
     ).first()
     
     if existing_vote:
@@ -79,7 +80,7 @@ def vote_recipe(
             return {"message": "Vote removed"}
     else:
         # Create new vote
-        new_vote = models.Vote(
+        new_vote = Vote(
             user_id=current_user.id,
             recipe_id=recipe_id,
             vote_type=vote.vote_type
@@ -105,18 +106,18 @@ def vote_recipe(
 @router.get("/{recipe_id}/votes")
 def get_recipe_votes(recipe_id: int, db: Session = Depends(get_db)):
     """Get vote statistics for a recipe"""
-    recipe = db.query(models.Recipe).filter(models.Recipe.id == recipe_id).first()
+    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
     
-    upvotes = db.query(models.Vote).filter(
-        models.Vote.recipe_id == recipe_id,
-        models.Vote.vote_type == "upvote"
+    upvotes = db.query(Vote).filter(
+        Vote.recipe_id == recipe_id,
+        Vote.vote_type == "upvote"
     ).count()
     
-    downvotes = db.query(models.Vote).filter(
-        models.Vote.recipe_id == recipe_id,
-        models.Vote.vote_type == "downvote"
+    downvotes = db.query(Vote).filter(
+        Vote.recipe_id == recipe_id,
+        Vote.vote_type == "downvote"
     ).count()
     
     return {

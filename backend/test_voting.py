@@ -101,4 +101,4 @@ def test_voting():
         print(f"❌ Failed to get best recipes: {response.text}")
 
 if __name__ == "__main__":
-    test_voting() 
+    test_voting()

@@ -1,15 +1,14 @@
 # backend/main.py
 from fastapi import FastAPI
-import models
-from database import engine
-from routers import user, recipe, stats
+from backend import models
+from backend.database import engine
+from backend.routers import user, recipe, stats
 from fastapi.middleware.cors import CORSMiddleware
 
-#models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# CORS middleware to allow requests from the frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],  # frontend origin

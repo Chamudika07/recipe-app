@@ -100,4 +100,4 @@ def main():
     print(f"Password: {user_data['password']}")
 
 if __name__ == "__main__":
-    main() 
+    main()
