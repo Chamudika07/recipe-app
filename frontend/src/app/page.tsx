@@ -13,15 +13,30 @@ type Recipe = {
 };
 
 export default async function HomePage() {
-  const bestChefRes = await fetch("https://recipe-app-backend-58c0e88c485c.herokuapp.com/stats/best-chef", {
-    cache: "no-store",
-  });
-  const bestRecipeRes = await fetch("https://recipe-app-backend-58c0e88c485c.herokuapp.com/stats/best-recipe", {
-    cache: "no-store",
-  });
+  let bestChef: Chef = { email: "", recipes: 0 };
+  let bestRecipe: Recipe = { title: "", description: "" };
 
-  const bestChef: Chef = await bestChefRes.json();
-  const bestRecipe: Recipe = await bestRecipeRes.json();
+  try {
+    const bestChefRes = await fetch("https://recipe-app-backend-58c0e88c485c.herokuapp.com/stats/best-chef", {
+      cache: "no-store",
+    });
+    if (bestChefRes.ok) {
+      bestChef = await bestChefRes.json();
+    }
+  } catch (error) {
+    console.error("Error fetching best chef:", error);
+  }
+
+  try {
+    const bestRecipeRes = await fetch("https://recipe-app-backend-58c0e88c485c.herokuapp.com/stats/best-recipe", {
+      cache: "no-store",
+    });
+    if (bestRecipeRes.ok) {
+      bestRecipe = await bestRecipeRes.json();
+    }
+  } catch (error) {
+    console.error("Error fetching best recipe:", error);
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-8 space-y-12">

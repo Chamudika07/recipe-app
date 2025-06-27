@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-from backend.models import Recipe, User, Vote
-from backend.schemas import RecipeCreate, RecipeOut, VoteCreate
-from backend.dependencies import get_db, get_current_user
+from models import Recipe, User, Vote
+from schemas import RecipeCreate, RecipeOut, VoteCreate
+from dependencies import get_db, get_current_user
 
 router = APIRouter(prefix="/recipes", tags=["Recipes"])
 

@@ -1,8 +1,8 @@
 # backend/routers/stats.py
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from backend import models
-from backend.dependencies import get_db
+import models
+from dependencies import get_db
 from sqlalchemy import func
 
 router = APIRouter(prefix="/stats", tags=["Stats"])
