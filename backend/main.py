@@ -1,8 +1,8 @@
 # backend/main.py
 from fastapi import FastAPI
-from backend import models
-from backend.database import engine
-from backend.routers import user, recipe, stats
+import models
+from database import engine
+from routers import user, recipe, stats
 from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
