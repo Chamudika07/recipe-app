@@ -14,7 +14,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "https://frontend-b1amn14j8-chamudikas-projects.vercel.app",
-        "https://recipe-3bgj948xz-chamudikas-projects.vercel.app"
+        "https://recipe-3bgj948xz-chamudikas-projects.vercel.app",
+        "https://frontend-2owvmb2eb-chamudikas-projects.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
