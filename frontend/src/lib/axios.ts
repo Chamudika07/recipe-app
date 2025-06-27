@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: "https://recipe-app-backend-58c0e88c485c.herokuapp.com",
 });
 
 export default instance;

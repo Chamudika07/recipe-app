@@ -1,7 +1,7 @@
 // src/app/recipes/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import VoteButtons from '@/components/VoteButtons';
 import { Recipe } from '../../../types';
 import Link from 'next/link';
@@ -12,17 +12,10 @@ export default function RecipesPage() {
   const [showBestOnly, setShowBestOnly] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    // Check if user is authenticated
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
-    fetchRecipes();
-  }, [showBestOnly]);
-
-  const fetchRecipes = async () => {
+  const fetchRecipes = useCallback(async () => {
     try {
       const endpoint = showBestOnly ? '/recipes/best' : '/recipes';
-      const res = await fetch(`http://localhost:8000${endpoint}`, {
+      const res = await fetch(`https://recipe-app-backend-58c0e88c485c.herokuapp.com${endpoint}`, {
         cache: 'no-store',
       });
       const data: Recipe[] = await res.json();
@@ -32,7 +25,14 @@ export default function RecipesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showBestOnly]);
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+    fetchRecipes();
+  }, [fetchRecipes]);
 
   const handleVoteChange = (recipeId: number, newVoteCount: number) => {
     setRecipes(prevRecipes =>

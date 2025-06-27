@@ -13,10 +13,10 @@ type Recipe = {
 };
 
 export default async function HomePage() {
-  const bestChefRes = await fetch("http://localhost:8000/stats/best-chef", {
+  const bestChefRes = await fetch("https://recipe-app-backend-58c0e88c485c.herokuapp.com/stats/best-chef", {
     cache: "no-store",
   });
-  const bestRecipeRes = await fetch("http://localhost:8000/stats/best-recipe", {
+  const bestRecipeRes = await fetch("https://recipe-app-backend-58c0e88c485c.herokuapp.com/stats/best-recipe", {
     cache: "no-store",
   });
 

@@ -33,14 +33,14 @@ export default function AddRecipePage() {
       } else {
         setIsChef(true);
       }
-    } catch (err) {
+    } catch {
       console.error("Invalid token");
       localStorage.removeItem("token");
       router.push("/login");
     }
-  }, []);
+  }, [router]);
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
@@ -58,8 +58,9 @@ export default function AddRecipePage() {
 
       alert("Recipe added!");
       router.push("/recipes");
-    } catch (err: any) {
-      console.error(err);
+    } catch (error: unknown) {
+      console.error(error);
+      const err = error as { response?: { data?: { detail?: string } } };
       alert("Failed to add recipe: " + (err.response?.data?.detail || "Unknown error"));
     }
   };
