@@ -21,6 +21,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def read_root():
+    return {"message": "Recipe App API is running"}
+
 app.include_router(user.router)
 app.include_router(recipe.router)
 app.include_router(stats.router)
