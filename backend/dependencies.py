@@ -11,6 +11,9 @@ load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
 
+if not SECRET_KEY or not ALGORITHM:
+    raise RuntimeError("SECRET_KEY and ALGORITHM must be set in environment variables")
+
 # ✅ OAuth2 scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
@@ -25,8 +28,8 @@ def get_db():
 # ✅ Dependency for getting current user from JWT
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
+        payload = jwt.decode(token, SECRET_KEY or "", algorithms=[ALGORITHM or ""])
+        email = payload.get("sub")
         if email is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
