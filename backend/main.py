@@ -20,3 +20,7 @@ app.add_middleware(
 app.include_router(user.router)
 app.include_router(recipe.router)
 app.include_router(stats.router)
+
+@app.get("/")
+def root():
+    return {"message": "Welcome to my API"}
